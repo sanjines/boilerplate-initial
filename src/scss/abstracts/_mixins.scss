@@ -1,0 +1,668 @@
+@use 'functions'as f;
+@use 'sass:math';
+@use "sass:color"as c;
+@use "sass:list"as l;
+@use "sass:selector"as sel;
+
+@use 'sass:meta';
+@use 'sass:string';
+//---------------------
+@use 'sass:map';
+
+//- ========  MIXIN PARA CENTRADO ELEMENTO ======== -//
+@mixin centra-elem($border: null) {
+  border-radius: $border;
+  margin:        0 auto;
+}
+
+//- ========  MIXIN PARA CENTRADO ABSOLUTO ======== -//
+@mixin centrar($horizontal: true, $vertica: true) {
+  @if ($horizonta and $vertical) {
+    position:  absolute;
+    top:       50%;
+    left:      50%;
+    transform: translate(-50%, -50%);
+  }
+
+  @else if() {
+    left:      50%;
+    transform: translate(-50%, 0);
+  }
+
+  @else if() {
+    top:       50%;
+    transform: translate(0, 50%);
+  }
+}
+
+// Ejemplo de llamado de el mixin center
+//  &.both {
+//    @include center;
+//  }
+
+//  &.horizontal {
+//    @include center(true, false);
+//  }
+
+//  &.vertical {
+//    @include center(false, true);
+//  }
+
+// MIXIN PARA LINKS DE SEUDOELEMNTOS
+@mixin linx($link, $visit, $hover, $active) {
+  a {
+    color: $link;
+
+    &:visited {
+      color: $visit;
+    }
+
+    &:hover {
+      color: $hover;
+    }
+
+    &:active {
+      color: $active;
+    }
+  }
+}
+
+// UTILIZACIONDE DE MIXIN LINKS
+// @include link-colors(#00c, #0cc, #c0c, #ccc, #cc0);
+
+// MIXIN PARA DETERMINAR EL ANCHO DE UN ELEMENTO
+@mixin width($width: 100%) {
+  width:  $width;
+  margin: 0 auto;
+}
+
+// MIXIN PARA DETERMINAR EL CRECIMINTO MAXIMO ANCHO DE UN ELEMENTO
+@mixin max-width($width: 100%) {
+  width:  $width;
+  margin: 0 auto;
+}
+
+// MIXIN BORDER RADIUS
+@mixin border-r($pixel) {
+  border-radius: $pixel;
+}
+
+// MIXIN BORDER RADIUS
+@mixin border-radius($top-left: null,
+  $top-right: null,
+  $bottom-right: null,
+  $bottom-left: null) {
+  border-radius: $top-left $top-right $bottom-right $bottom-left;
+}
+
+// FLEX BOX(SU IMPLEMENTACION ES ALGO COMPLICADO)
+@mixin flex($option, $x, $y) {
+  display:         $option;
+  justify-content: $x;
+  align-items:     $y;
+}
+
+//- ======== MIXIN PARA LA IMPLEMENTACION DE GRILLAS CON CSS GRID ======== -//
+@mixin col1($grid: null, $col: null, $gutter: null) {
+  @if ($grid) {
+    display:               $grid;
+    grid-template-columns: $col;
+    gap:                   $gutter;
+  }
+}
+
+@mixin col($grid: null, $rep: null, $col: null, $gap: null) {
+  @if ($grid) {
+    display:               $grid;
+    grid-template-columns: repeat(append($rep, $col, $separator: comma));
+    gap:                   $gap;
+  }
+}
+
+@mixin row($rep: null, $row: null) {
+  @if ($rep) {
+    grid-template-rows: repeat(append($rep, $row, $separator: comma));
+  }
+}
+
+// - FIN DE MIXIN
+
+// ==============================================
+// - ** MIXIN PARA LINEAS CON GRADIENTES  **
+// ==============================================
+
+@mixin line($m-w: null, $h: null, $b-st: null, $bg: null, $m-top: null) {
+  @if ($m-w) {
+    max-width:    $m-w;
+    height:       $h;
+    border-style: $b-st;
+
+    background: $bg;
+    margin-top: $m-top;
+  }
+}
+
+// - FIN DE MIXIN
+
+// ==============================================
+// -  ******  MIXIN IMG-BG + OVERLAY  *******
+// ==============================================
+
+$route: "/assets/img/";
+
+@function url-img($image-extencion) {
+  @return url($route + $image-extencion);
+}
+
+@mixin bg-overlay($img, $width: 100%, $height: 100vh) {
+  & {
+    position: relative;
+    width:    $width;
+    height:   $height;
+
+    background: {
+      image:      url-img($img);
+      repeat:     no-repeat;
+      size:       cover;
+      position:   center;
+      attachment: fixed;
+    }
+
+    &::before {
+      position: absolute;
+      content:  "";
+      width:    $width;
+      height:   $height;
+      background: linear-gradient(80deg,
+          rgba(255, 0, 0, 0.404),
+          rgba(255, 166, 0, 0.377));
+      // background: linear-gradient(45deg, rgba(119, 166, 253, 0.123), rgba(13, 18, 29, 0.986));
+    }
+  }
+}
+
+//- ======== FIN DE MIXIN ======== -//
+
+// ==============================================
+// -      **********  GRILLAS studiar ***********
+// ==============================================
+
+// @mixin grid($colSpan, $gridColumns: 12, $margin: 1%) {
+//   $unitWidth: $gridColumns / $colSpan;
+//   float: left;
+//   width: (100 - $unitWidth * $margin) / $unitWidth;
+//   margin: 0 $margin/2;
+// }
+
+@mixin grid($colSpan, $gridColumns: 12, $margin: 1%) {
+  $unitWidth: math.div($gridColumns, $colSpan);
+  float:      left;
+  width:      math.div((100 - $unitWidth * $margin), $unitWidth);
+  margin:     0 math.div($margin, 2);
+}
+
+//- ======== FIN DE MIXIN ======== -//
+
+// ==============================================
+// - **********  MIXIN BOTON  ***********
+// ==============================================
+
+@mixin buttonA($name, $color, $border-radius...) {
+  &--#{$name} {
+    border-radius: $border-radius;
+    border:        1px solid $color;
+    color:         $color;
+
+    &:hover {
+      background-color: $color;
+      text-shadow:      1px 2px 2px c.scale(#0e0e0e, $lightness: -10%, $saturation: 10%);
+      color:            rgb(235, 235, 235);
+    }
+  }
+}
+
+// FIN FUNCION BOTON
+
+//IMPLEMENTACION A CSS
+
+// .boton{
+
+//   & .btn-outline-primario {
+//     padding: 5rem;
+//     width: 100px;
+//     height: 150px;
+//     @include boton ('primario', pink, 5px);
+// }
+
+// ==============================================
+// -**** RECORRIENDO ELEMENTOS CON NTH()
+//- PARA ASIGNAR COLOR DE FONDO ***
+// ==============================================
+
+$alternating-colors: #f44336,
+#9c27b0,
+#2196f3,
+#4caf50,
+#ff9800,
+#9e9e9e;
+
+@mixin alternating-background {
+  @for $i from 1 through length($alternating-colors) {
+    &:nth-child(#{length($alternating-colors)}n + #{$i}) {
+      background-color: (l.nth($alternating-colors, $i));
+    }
+  }
+}
+
+//- APLICACION DE MIXINS
+
+// .a {
+//   @include alternating-background;
+// }
+
+// ==============================================
+// -****   REMPLAZO DE ETIQUETA  ****
+// ==============================================
+
+@mixin contexto($contexto-actual, $nuevo-contexto) {
+  @at-root #{sel.replace(&, $contexto-actual, $nuevo-contexto)} {
+    @content;
+  }
+}
+
+//- APLICACION DE MIXINS
+
+// .re{
+//   @include contexto('.re', '.der'){
+//     color: red;
+//   }
+// }
+
+// SALIDA
+// .der-x {
+//   color: orange;
+// }
+//- FIN DE MIXIN
+
+// ==============================================
+// -****   MARGENES PERSONALIZADOS  ****
+// ==============================================
+
+@mixin margin($m-t: null, $m-r: null, $m-l: null, $m-b: null) {
+  margin: {
+    top:    $m-t;
+    right:  $m-r;
+    left:   $m-l;
+    bottom: $m-b;
+  }
+}
+
+
+
+
+
+// ==============================================
+// -**********  CUSTON PROPERTIES  ***********
+// ==============================================
+
+@mixin cssvars($css_variables) {
+  :root {
+
+    @each $name,
+    $value in $css_variables {
+      --#{$name}: #{$value};
+    }
+  }
+}
+
+// ==============================================
+// -****   CASO DE USO DE CUSTON PROPERTIES****
+// ==============================================
+// @use '../config/mixins'as cpro;
+
+// @include cpro.cssvars((base-font-size: 65.5%,
+//     // font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
+
+//     primary-color: #33b5e5,
+//     secondary-color: #ff500a,
+//     terceary-color: #0a4fff,
+//   ));
+
+
+@mixin dGrid ($grid, $gap) {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax($grid, 1fr));
+  gap:                   $gap;
+}
+
+
+// @mixin wave($top: null, $bottom:null){
+//   position: relative;
+//   top: $top;
+//   bottom: $bottom;
+
+// }
+
+// ==============================================
+// -   ****  CREACIONES DE BOTONES  ***********
+// ==============================================
+@mixin button($name, $color) {
+  &-#{$name} {
+    border:           1px solid $color;
+    color:            rgb(19, 18, 18);
+    background-color: $color;
+    cursor:           pointer;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.159);
+      color:            rgb(221, 221, 221);
+    }
+  }
+}
+
+
+
+
+
+// ==============================================
+// -***** CREACION DE VARIABLES CSS  ******
+// ==============================================
+@mixin cssvars($css_variables) {
+  :root {
+
+    @each $name,
+    $value in $css_variables {
+      --#{$name} : #{$value};
+    }
+  }
+}
+
+// ==============================================
+// -********  CASODE USO CSSVARS  *********
+// ==============================================
+
+// @use '../config/mixins'as cpro;
+
+// @include cpro.cssvars((base-font-size: 65.5%,
+//  font-family: #{"HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif},
+
+//     primary-color: #33b5e5,
+//     secondary-color: #ff500a,
+//     terceary-color: #0a4fff,
+//   ));
+
+
+
+
+
+
+// ==============================================
+// -****      MEDIA(BREAKPOINTD)      *****
+// ==============================================
+
+$break: (
+  grupoA: (
+    xs: 0,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px),
+  grupoB: (
+    small : 576px,
+    medium : 768px,
+    large : 992px,
+    extra-large: 1200px),
+);
+
+
+@function points($puntos, $grupo) {
+  @return map.get(map.get($break, $puntos), $grupo);
+}
+
+
+// ==============================================
+// - ****** MIXINS2 DE CONSULTA DE MEDIOS  ****
+// ==============================================
+
+$bf: 16;
+
+@mixin bp($bp, $min-max: min-width) {
+  $em: math.div($bp, $bf);
+
+  @media (#{$min-max}: #{$em}em) {
+    @content;
+  }
+}
+
+// ==============================================
+// -***  CASO DE USO DE MIXIN BP  *****
+// ==============================================
+// .body {
+//   @include bp(360) {
+//     background-color: red;
+//   }
+// }
+
+
+
+// ==============================================
+// -***  CASO DE USO DE MIXIN OUTLINE  *****
+// ==============================================
+
+@mixin out-line($grosor: null, $estilo: null, $color: null, $offset: null) {
+  outline: {
+    width:  $grosor;
+    style:  $estilo;
+    color:  $color;
+    offset: $offset;
+  }
+
+}
+
+// @include m.out-line(calc(var(--out-line) + 20px), dashed, var(--blue-900), -10px);
+
+// ==============================================
+// -***  FIN DE MIXIN OUTLINE  *****
+// ==============================================
+
+
+
+
+// .prueba {
+//   $lista: (red orange blue);
+
+//   // content: l.append($lista, purple, $separator:comma);
+//   @if(l.index($lista, blue)) {
+//     background-color: l.nth($lista, -3);
+//     border:           1px solid l.nth($lista, -2);
+//   }
+
+//   @else {
+//     background-color: l.nth($lista, -1);
+//   }
+// }
+
+
+// ==============================================
+// -***** PROPIEDADES DINACAS DE VALORED   ******
+// ==============================================
+@mixin social-icon($args...) {
+  // @debug meta.keywords($args);
+  // (string: #080, comment: #800, variable: #60b)
+
+  @each $name,
+  $color in meta.keywords($args) {
+    .icon-#{$name} {
+      color:         $color;
+      width:         40px;
+      height:        40px;
+      border-radius: 5px;
+
+      &__border {
+        border: 1px solid c.scale($color, $lightness: -80%);
+      }
+    }
+
+  }
+}
+
+
+// ==============================================
+// -***  CASO DE USO DE SOCIAL-ICONS  ******
+// ==============================================
+
+// @include social-icon($facebook: rgb(136, 0, 0),
+//   $youtube: #800,
+//   $pintereset: #60b,
+//   $telegram: peru,
+//   $twich: orange)
+
+
+
+
+// ==============================================
+// -      **********    ***********
+// ==============================================
+
+$ruta:  '../assets/img/';
+$punto: '.';
+
+@function pat($img, $extencion: null) {
+  @return url(quote($ruta + $img + $punto + $extencion));
+}
+
+// @function pat($extencion) {
+//   @return url($ruta+$extencion);
+// }
+
+// CASO DE USO DE MIXIN
+// background: pat(code3, jpg);
+
+
+// ==============================================
+// -      **********  COLUMNAS   ***********
+// ==============================================
+@mixin columnas($col, $cantidad-col:12) {
+  background-color: rgba(128, 128, 128, 0.296);
+
+  @if $col <=$cantidad-col {
+    width: math.percentage(math.div($col, $cantidad-col));
+  }
+
+  @else {
+    @at-root {
+      body {
+        &::before {
+          content:          'La cantida de columnas es de: #{$col} no se puede exeder mas de: #{$cantidad-col} columas';
+          background-color: red;
+          padding:          1.5rem;
+          display:          block;
+          text-align:       center;
+        }
+      }
+    }
+  }
+}
+
+// ==============================================
+// -      **********  CASO DE USO  ***********
+// ==============================================
+// .col3 {
+//   @include columnas(6);
+// }
+
+
+// ==============================================
+// -******  RECORRIENDO UNA LISTAs  ***********
+// ==============================================
+
+// $sizes:
+// (black red green peru purple pink);
+
+// @each $size in $sizes {
+//   .#{color__ + $size} {
+//     color: $size;
+//   }
+// }
+
+// $icons: ("eye": "\f112", "start": "\f12e", "stop": "\f12f");
+
+// @each $name, $glyph in $icons {
+//   .icon-#{$name}:before {
+//     display: inline-block;
+//     font-family: "Icon Font";
+//     content: $glyph;
+//   }
+// }
+
+
+// ================================================================
+// -  ***  RECORRIENDO LISTAS DENTRO DE LISTAS(listas anidadas)  **
+// ===============================================================
+
+$networks: ('facebook', blue, 1px),
+('twiter', lightblue, 3px),
+('youtube', red, 3px);
+
+
+@function sublist($list, $index, $subindex) {
+  $sublist: nth($list, $index);
+  $value:   nth($sublist, $subindex);
+  @return $value;
+}
+
+// .icon__footer::after {
+//   background-color: sublist($networks, 2, 3);
+// }
+
+// ==============================================
+// -  *******  MIXIN NEOMORFISMO  ***********
+// ==============================================
+
+
+@mixin neo($radius, $eje) {
+  border-radius:    $radius;
+  background-color: var(--blue-100);
+  box-shadow:       $eje $eje ($eje * 2) #bebebe,
+    (-$eje) (-$eje) ($eje * 2) white;
+}
+
+
+// ==============================================
+// -      **********  CASO DE USO  ***********
+// ==============================================
+// .neo {
+//   @include neo(30px, 21px);
+// }
+
+
+// ==============================================
+// -      **********  HOVER  ***********
+// ==============================================
+
+@mixin hover() {
+  &:not([disable]):hover {
+    @content;
+  }
+}
+
+
+// prueba
+%buttonLayout {
+  width:            120px;
+  height:           auto;
+  color:            white;
+  background-color: #303030;
+}
+
+
+@mixin buttonL() {
+  @extend %buttonLayout;
+}
+
+
+// .prueba {
+//   @include buttonL();
+// }
+
+

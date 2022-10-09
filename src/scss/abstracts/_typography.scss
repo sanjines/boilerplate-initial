@@ -1,0 +1,4 @@
+@use '../abstracts/fonts';
+// @include fonts.font-face(Roboto, "../assets/fonts/Roboto/Roboto-Medium");
+@include fonts.font-face(Poppins, '../assets/fonts/Poppins/Poppins-Regular', null, null, ttf);
+

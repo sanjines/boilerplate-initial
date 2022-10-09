@@ -1,0 +1,87 @@
+html {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height:     100%;
+  font-family: Poppins;
+}
+
+*,
+*::after,
+*::before {
+  padding:         0;
+  margin:              0;
+  box-sizing:      inherit;
+  text-decoration: none;
+  list-style-type: none;
+  line-height: calc(1em + 0.5rem);
+}
+
+body {
+  font-size: var(--font-normal-size);
+  // color: var(--color-text);
+  // overflow-x: hidden;
+
+  //- PUEDES BORRAR ESTA INSTRUCCION SOLO ES DE BIENVENIDA
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+p {
+  //-line-height(espacio entre lineas de texto )predeterminado es de:⤵
+  line-height: 1.5;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  line-height: 1.3;
+  // Propieda opcional quiebre de palabras de mucha lomgitud investigar al respecto
+  // overflow-wrap: break-word;
+}
+
+h1 {
+  text-align: center;
+  padding: 1.5rem;
+  color: var(--color-first);
+
+  //- PUEDES BORRAR ESTA INSTRUCCION SOLO ES DE BIENVENIDA
+  border: 2px solid var(--color-first);
+  margin: 2rem;
+  border-radius: 8px;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul {
+  text-decoration: none;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  // max-width         : 100%;
+  // width:              100%;
+  // height:             auto;
+  // max-inline-size: 100%;
+  // block-size: auto;
+  vertical-align: bottom;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}

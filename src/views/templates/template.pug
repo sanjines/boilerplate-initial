@@ -1,0 +1,24 @@
+doctype html
+html(lang="es")
+  block config
+    include ../config/vars
+  block mixins
+    include ../mixins/mixin
+  head
+    meta(charset="utf-8")
+    meta(name="viewport", content="initial-scale=1.0, width=device-width")
+    block meta
+      include ../includes/meta_tags
+    //- block SEO
+    //-   include ../includes/meta_tags
+    include ../includes/favicons
+    each styles in link
+      link(href=`/css/${styles}.css` rel='stylesheet')
+    title= pageTitle
+
+  body
+    h1 Biénvenido a boilerplate-initial hecho en Gulp Pug Sass Babel  de nelo...Disfrute !!!
+    block scripts
+      for item in scriptsItems
+        script(src= `js/${item}.js`)
+

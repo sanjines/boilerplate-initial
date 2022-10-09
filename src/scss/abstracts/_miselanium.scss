@@ -1,0 +1,42 @@
+$miselanium: (
+  typography:(
+    biggest-font-size: 2rem,
+    h1-font-size     : 1.5rem,
+    h2-font-size     : 1.25rem,
+    h3-font-size     : 1rem,
+    normal-font-size : .938rem,
+    small-font-size  : .813rem,
+    smaller-font-size: .75rem,
+  ),
+  font-weigth:(
+    font-medium: 600,
+    font-bold: 700,
+  ),
+  margin:(
+    mb-0-5: .5rem,
+    mb-0-75: .75rem,
+    mb-1: 1rem,
+    mb-1-5: 1.5rem,
+    mb-2: 2rem,
+    mb-2-5: 2.5rem,
+    mb-3: 3rem,
+  ),
+  layout:(
+    max-w: 1450px,
+
+  ),
+  z-index:(
+    z-tooltip: 10,
+    z-fixed: 100,
+  ),
+  neomorfism:(
+    shadow: 2px 2px 5px hsl(0, 0%, 5%),
+    color-gradient-start: #4da7db,
+    color-gradient-stop: #5bc6ff,
+    color-outset-start: #3c82aa,
+    color-outset-stop: #6ff1ff,
+    color-inset-start: rgba(0, 0, 0, 0),
+    color-inset-stop: rgba(0, 0, 0, 0),
+    out-line: 1px dashed,
+  ),
+);

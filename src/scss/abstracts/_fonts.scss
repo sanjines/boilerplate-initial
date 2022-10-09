@@ -1,0 +1,88 @@
+// Buenas a tod@s.
+
+// Es esta ocasión comenzamos un serie de posts en los que iremos recomendando algunos de los mixins de SASS que consideramos interesantes y que nosotros mismos utilizamos en algunos de nuestros proyectos.
+
+// Para comenzar con la serie, recomendamos un mixin para escribir reglas @font-face en SASS y que podéis encontrar aquí.
+
+// Todos los formatos OpenType, WOFF2, WOFF, TrueType y SVG son añadidos automáticamente, generándose el css siguiente:
+
+
+//     @font-face {
+//         font-family: "Samplino";
+//         src: url("fonts/Samplino.eot?") format("eot"),
+//             url("fonts/Samplino.woff2") format("woff2"),
+//             url("fonts/Samplino.woff") format("woff"),
+//             url("fonts/Samplino.ttf") format("truetype"),
+//             url("fonts/Samplino.svg#Samplino") format("svg");
+//     }
+// Pero, además, nos permite otras opciones como, por ejemplo:
+
+// Una regla que aplica a textos en negrita y cursiva simplemente de la siguiente manera:
+
+// @include font-face("Samplina Neue", fonts/SamplinaNeue, bold, italic);
+// Una regla que solo aplica a formato WOFF, con:
+
+// @include font-face(Samplinoff, fonts/Samplinoff, null, null, woff);
+// O una regla que, por ejemplo, solo aplica a textos con font-weight 500 y formatos EOT, WOFF2, y WOFF, con:
+
+// @include font-face(Samplinal, fonts/Samplinal, 500, normal, eot woff2 woff);
+// Os animamos a que lo probéis y saquéis vuestras propias conclusiones, y si os ayuda en algo mucho mejor.
+
+
+// El código del mixins en su totalidad es el siguiente:
+// =============================================================================
+// String Replace
+// =============================================================================
+@function str-replace($string, $search, $replace: "") {
+	$index: str-index($string, $search);
+
+	@if $index {
+		@return str-slice($string, 1, $index - 1) + $replace +
+			str-replace(str-slice($string, $index + str-length($search)), $search, $replace);
+	}
+
+	@return $string;
+}
+
+
+// =============================================================================
+// Font Face
+// =============================================================================
+
+@mixin font-face($name, $path, $weight: null, $style: null, $exts: eot woff2 woff ttf svg){
+// @mixin font-face($name, $path, $weight: null, $style: null, $exts: ttf) {
+  $src: null;
+
+  $extmods: (
+      eot: "?",
+      svg: "#"+ str-replace($name, " ", "_"),
+    );
+
+  $formats: (
+      otf: "opentype",
+      ttf: "truetype",
+    );
+
+  @each $ext in $exts {
+    $extmod: if(map-has-key($extmods, $ext),
+        $ext + map-get($extmods, $ext),
+        $ext);
+    $format: if(map-has-key($formats, $ext),
+              map-get($formats, $ext), $ext);
+    $src:    append(
+        $src,
+        url(quote($path + "." + $extmod)) format(quote($format)),
+        comma
+      );
+  }
+
+  @font-face {
+    font-family: quote($name);
+    font-style:  $style;
+    font-weight: $weight;
+    src:         $src;
+  }
+}
+
+// CASO DE USO INTERNO
+// @include font-face(Roboto, "../assets/Roboto/Roboto-BlackItalic");

@@ -1,0 +1,34 @@
+/*=============== VARIABLES CSS ===============*/
+:root {
+  --header-height: 3.5rem;
+  --max-w: 1024px;
+
+  /*========== Colors ==========*/
+  /*Color mode HSL(hue, saturation, lightness)*/
+  --color-first: hsl(203, 71%, 60%);
+
+
+  /*========== Font and typography ==========*/
+  /*.5rem = 8px | 1rem = 16px ...*/
+  --font-body: 'Oxanium', cursive;
+  --font-biggest-size: 2.25rem;
+  --font-size_h2: 1.25rem;
+  --font-normal-size: .938rem;
+  --font-smaller-size: .75rem;
+
+  /*========== Font weight ==========*/
+  --font-semi-bold: 600;
+
+  /*========== z index ==========*/
+  --z-fixed: 100;
+}
+
+/* Responsive typography */
+@media screen and (min-width: 1024px) {
+  :root {
+    --biggest-font-size: 4rem;
+    --h2-font-size: 1.5rem;
+    --normal-font-size: 1rem;
+    --smaller-font-size: .813rem;
+  }
+}

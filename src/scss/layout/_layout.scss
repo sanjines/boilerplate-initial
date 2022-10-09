@@ -1,0 +1,20 @@
+@use 'abstracts/mixins'as m;
+
+// ==============================================
+// - *** LAYOUT  ***
+// ==============================================
+
+.l-wrapper {
+  max-width: var(--max-w);
+  // outline: 1px dashed white;
+
+  margin: {
+    left:  auto;
+    right: auto;
+  }
+
+  padding: {
+    left:  1rem;
+    right: 1rem;
+  }
+}

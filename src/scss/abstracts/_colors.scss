@@ -1,0 +1,20 @@
+$colors:(
+  primary:(
+    first: hsl(193, 5%, 36%),
+    secondary: blue,
+    button: hsl(0, 0%, 17%),
+    button-alt: hsl(0, 0%, 21%),
+    title: hsl(210, 100%, 17%),
+    text: hsl(0, 0%, 35%),
+    text-light: hsl(0, 0%, 55%),
+    body: hsl(0, 0%, 99%),
+    container: rgb(17, 22, 54),
+    border: hsl(0, 0%, 94%),
+    footer: hsl(202, 74%, 61%),
+
+  ),
+  secondary:(
+    100: orange,
+    200: green,
+  ),
+);

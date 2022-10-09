@@ -1,0 +1,213 @@
+@use 'sass:color'as c;
+@use 'sass:map';
+@use 'sass:list';
+@use 'sass:math';
+
+$primary: (
+  dark-blue: hsl(233, 26%, 24%),
+  lime-green: hsl(136, 65%, 51%),
+  bright-cyan: hsl(192, 70%, 51%),
+);
+
+@function c-p($darValor) {
+  @return map-get($primary, $darValor);
+}
+
+$neutral: (
+  grayish-blue: hsl(233, 8%, 62%),
+  light-grayish-blue: hsl(220, 14%, 96%),
+  very-light-gray: hsl(0, 0%, 98%),
+  white: hsl(0, 0%, 100%),
+);
+
+@function c-n($darValor) {
+  @return map-get($neutral, $darValor);
+}
+
+// FIN DE FUNCION DE COLORES
+
+// ==============================================
+// -   ***** FUNCION FONT-SIZE   ******
+// ==============================================
+
+@function font-calc($size, $type) {
+  $font: 16;
+
+  @if $type==h1 {
+    $font: ($size + 0.2 * $size);
+  }
+
+  @if $type==h2 {
+    $font: ($size + 0.1 * $size);
+  }
+
+  @else {
+    $font: 16;
+  }
+
+  @return $font+px;
+}
+
+// EJEMPLO DE IMPLEMENTACION
+//   .ejemplo{
+//     font-size: font-calc(50, h2);
+// }
+
+//- FINAL FUNCION FONT-SIZE
+
+// ==============================================
+//-** FUNCION DE COLORES(UTILZAR)  **
+// ==============================================
+
+// set-color - funciona a traves de los modulos nativos, en funciones de colores con el modulo @use 'sass.map'
+$set-color: (
+  gris: (
+  base: #ccc,
+  claro: #f2f2f2,
+  obscuro: #666,
+  ),
+  marron: (base: #ac906b,
+    claro: #ecdac3,
+    obscuro: #5e421c,
+  ),
+  verde: (base: #e7f8dc,
+    claro: #bceea5,
+    obscuro: #2a4906,
+  ),
+);
+
+@function color($tema, $tono: base) {
+  @return map.get(map.get($set-color, $tema), $tono);
+}
+
+//EJEMPLO DE IMPLEMENTACION DE LA FUNCION DE UNION DE COLORES
+
+// .header{
+//   background-color:  f.color(marron, obscuro);
+// }
+
+// FIN DE FUNCION DE COLORES
+
+// ==============================================
+// -***  FUNCION CONVERSION PX A EM REM % ***
+// ==============================================
+
+// FORMA(1)
+$font-size: 16px;
+
+@function em($el, $parent: 16px) {
+  @return ($el / $parent) * 1em;
+}
+
+// FUNCION PARA TRANSFORMACION DE PX A REM
+// FORMA(1)
+@function rem($el, $parent: 16px) {
+  @return math.div($el, $parent) * 1rem;
+}
+
+@function porcentage($el, $parent: 16px) {
+  @return ($el / $parent) * 100%;
+}
+
+//FORMA(2)
+@function px-a-rem($pixeles) {
+  @return #{$pixeles/$font-size}rem;
+}
+
+// FIN FUNCION CONVERSION PX A MEDIDAS
+
+//- TODO: Funcion para hecer llamado a rutas relativas de archivos de imagenes
+$route: "/assets/img/";
+
+@function url-img($image-extencion) {
+  @return url($route + $image-extencion);
+}
+
+//  Capas z-index
+$z-index: (abajo: -1,
+  predeterminado: 100,
+  medio: 300,
+  superior: 500,
+);
+
+@function layer($layer) {
+  @return map.get($z-index, $layer);
+}
+
+// ==============================================
+// -*******  MIXIN MEDIAQUERYES  *********
+// ==============================================
+$breakpoints: ( // "mini": 320px,
+  // "medium": 1100px,
+  // "big": 1300px,
+  sm: 576px,
+  md: 768px,
+  lg: 992px,
+  xl: 1200px);
+
+// FUNCION CON INTERACCION DE MIXIN PARA CASO DE USO DE MEDIAS MEDIAQUERIES
+@function breakpoint($point) {
+  @return map.get($map: $breakpoints, $key: $point);
+}
+
+@mixin media($point) {
+  @media screen and (min-width: breakpoint($point)) {
+    @content;
+  }
+}
+
+// body {
+// 	@include point("mini") {
+// 		& > h1 {
+// 			color: red;
+// 		}
+// 	}
+// }
+
+@mixin hover() {
+  &:not([disable]):hover {
+    @content;
+  }
+}
+
+
+
+// ==============================================
+// -***  CRECIMIENTO DE ENCABEZADOS h1, h2, etc...
+//            SEGUN CONSULTA DE MEDIOS  ******
+// ==============================================
+// Leer el artículo: http://sassbreak.com/viewport-relative-headings-with-sass
+
+// Max breakpoint- esta variabe puede ser modificada a criterio
+// $max-breakpoint: 1025;
+$max-breakpoint: 500;
+
+// Esta podría ser una de las variables de punto de interrupción de la consulta de medios
+// $wide-screen: "(min-width: #{$max-breakpoint}px)";
+$wide-screen: "(max-width: #{$max-breakpoint}px)";
+
+// Funcion
+@function get-vw($target) {
+  // 1 vw es igual al 1% del ancho de la ventana gráfica
+  $vw-context: ($max-breakpoint * .01) * 1px; // 1% ancho de la ventana gráfica
+  @return ($target/$vw-context) * 1vw;
+}
+
+// Mixin
+@mixin vw($size) {
+  font-size: get-vw($size);
+  // Evite que el tamaño de la fuente sea demasiado grande
+  @media #{$wide-screen} {
+    font-size: $size;
+  }
+}
+
+// Si el ancho de la ventana gráfica es de 1025 px o más, el tamaño de fuente permanecerá en 72 px. De lo contrario, el valor se ajustará a 7.2vw.
+
+// ==============================================
+   // -   ***** CASO DE USO VW MIXIN *******
+// ==============================================
+// .headline {
+//   font-size: 4.5em; // Fallback(Retroceder)
+//   @include vw(72px);
+// }
